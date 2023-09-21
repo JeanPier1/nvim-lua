@@ -21,7 +21,7 @@ vim.opt.swapfile = false
 vim.cmd [[ set noswapfile ]]
 
 --- case terminal powershell
-vim.opt.shell = 'powershell'
+vim.opt.shell = 'pwsh'
 
 --Line numbers
 vim.wo.number = true
