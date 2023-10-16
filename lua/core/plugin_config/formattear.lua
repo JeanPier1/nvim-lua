@@ -1,41 +1,44 @@
 require('formatter').setup({
   logging = false,
+  log_level = vim.log.levels.WARN,
   filetype = {
-    javascript = {
-      -- prettierd
-      function()
-        return {
-          exe = "prettierd",
-          args = { vim.api.nvim_buf_get_name(0) },
-          stdin = true
-        }
-      end
+    json = { require("formatter.filetypes.json").fixjson },
+    typescript = { require("formatter.filetypes.typescript").prettier },
+    typescriptreact = {
+      require("formatter.filetypes.typescriptreact").prettier,
     },
-    typescript = {
+    lua = { require("formatter.filetypes.lua").stylua },
+    ["*"] = {
+      require("formatter.filetypes.any").remove_trailing_whitespace,
       function()
-        return {
-          exe = "prettierd",
-          args = { vim.api.nvim_buf_get_name(0) },
-          stdin = true
-        }
-      end
+        -- Ignore already configured types.
+        local defined_types = require("formatter.config").values.filetype
+        if defined_types[vim.bo.filetype] ~= nil then
+          return nil
+        end
+        vim.lsp.buf.format({ async = true })
+      end,
     },
-    lua = {
-      function()
-        return {
-          exe = "prettierd",
-          args = { vim.api.nvim_buf_get_name(0) },
-          stdin = true
-        }
-      end
-    },
-    -- other formatters ...
   }
 })
 
 vim.cmd [[
 augroup FormatAutogroup
   autocmd!
-  autocmd BufWritePost * FormatWrite
+  autocmd BufWritePre * FormatWrite
 augroup END
 ]]
+-- vim.cmd [[
+-- augroup Prettier
+--   autocmd!
+--   autocmd BufWritePre * Prettier
+-- augroup END
+-- ]]
+
+vim.keymap.set("n", "<leader>f", function()
+  if settings[vim.bo.filetype] ~= nil then
+    vim.cmd([[Format]])
+  else
+    vim.lsp.buf.format()
+  end
+end)

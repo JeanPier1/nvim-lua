@@ -1,40 +1,33 @@
-local null_ls = require("null-ls")
-
+local diagnostics = require("null-ls").builtins.diagnostics
+local formatting = require("null-ls").builtins.formatting
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-local lsp_formatting = function(bufnr)
-  vim.lsp.buf.format({
-    filter = function(client)
-      return client.name == "null-ls"
-    end,
-    bufnr = bufnr,
-  })
-end
-
-require("null-ls").setup {
-  source = {
-    null_ls.builtins.formatting.prettierd,
-    null_ls.builtins.diagnostics.eslint_d.with({
-      diagnostics_format = '[eslint] #{m}\n(#{c})'
-    }),
-    null_ls.builtins.diagnostics.fish
+require("null-ls").setup({
+  sources = {
+    -- formatting.black,
+    -- formatting.rustfmt,
+    -- formatting.phpcsfixer,
+    formatting.prettier,
+    -- formatting.stylua,
   },
   on_attach = function(client, bufnr)
+    if client.name == "tsserver" or client.name == "rust_analyzer" or client.name == "pyright" then
+      client.resolved_capabilities.document_formatting = false
+    end
+
     if client.supports_method("textDocument/formatting") then
       vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
       vim.api.nvim_create_autocmd("BufWritePre", {
         group = augroup,
-        buffer = bufnr,
         callback = function()
-          lsp_formatting(bufnr)
-        end
+          -- vim.lsp.buf.formatting_sync()
+        end,
       })
     end
-  end
-}
-
-vim.api.nvim_create_user_command('DisableLspFormatting', function()
-    vim.api.nvim_create_autocmd({ group = augroup, buffer = 0 })
   end,
-  { nargs = 0 }
-)
+})
+
+---------------------------------
+-- Auto commands
+---------------------------------
+-- vim.cmd([[ autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync() ]])
