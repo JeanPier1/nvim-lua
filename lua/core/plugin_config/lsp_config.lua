@@ -1,26 +1,19 @@
--- local status, nvim_lsp = pcall(require, "lsconfig")
--- if (not status) then return end
-
-
 local agroup_format = vim.api.nvim_create_augroup("Format", { clear = true })
-local enable_format_on_save = function(_, bufnr)
-  vim.api.nvim_clear_autocmds({ group = agroup_format, buffer = bufnr })
-  vim.api.nvim_create_autocmd("BufWritePre", {
-    group = agroup_format,
-    buffer = bufnr,
-    callback = function()
-      vim.lsp.buf.format({ bufnr = bufnr })
-    end
-  })
-end
-
 
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local opts = { noremap = true, silent = true }
-  enable_format_on_save(client, bufnr)
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  if client.resolved_capabilities.document_formatting then
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("Format", { clear = true }),
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.formatting_sync(nil, 1000)
+      end
+    })
+  end
 end
 
 
@@ -81,11 +74,13 @@ require("lspconfig").lua_ls.setup {
 }
 
 require("lspconfig").tsserver.setup {
+  capabilities = capabilities,
   init_options = { documentFormatting = true },
-  on_attach = on_attach,
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+  end,
   filtetypes = { "typescript", "typescriptreact", "typescript.tsx" },
   cmd = { "typescript-language-server", "--stdio" },
-  capabilities = capabilities
 }
 
 require("lspconfig").solargraph.setup {
@@ -96,8 +91,10 @@ require("lspconfig").pyright.setup {
   capabilities = capabilities,
 }
 require("lspconfig").cssls.setup {
-  -- on_attach = on_attach,
   capabilities = capabilities,
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+  end,
 }
 
 require("lspconfig").tailwindcss.setup {
@@ -136,7 +133,6 @@ require("lspconfig").lua_ls.setup {
   capabilities = capabilities,
   on_attach = function(client, bufnr)
     on_attach(client, bufnr)
-    enable_format_on_save(client, bufnr)
   end,
   settings = {
     Lua = {
@@ -183,3 +179,11 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 --   au BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss  Prettier
 -- augroup END
 -- ]]
+-- vim.cmd [[autocmd BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss Prettier  ]]
+vim.cmd [[
+augroup Prettier
+  autocmd!
+  autocmd BufWritePre * Prettier
+  autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+augroup END
+]]
