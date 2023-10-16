@@ -177,9 +177,9 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 
-vim.cmd [[
-augroup Prettier
-  au!
-  au BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss  Prettier
-augroup END
-]]
+-- vim.cmd [[
+-- augroup Prettier
+--   au!
+--   au BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss  Prettier
+-- augroup END
+-- ]]
