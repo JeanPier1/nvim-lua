@@ -183,7 +183,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 vim.cmd [[
 augroup Prettier
   autocmd!
-  autocmd BufWritePre * Prettier
+  autocmd BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss
   autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
 augroup END
 ]]

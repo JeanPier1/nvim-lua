@@ -7,6 +7,9 @@ require('formatter').setup({
     typescriptreact = {
       require("formatter.filetypes.typescriptreact").prettier,
     },
+    html = {
+      require("formatter.filetypes.html").prettier,
+    },
     lua = { require("formatter.filetypes.lua").stylua },
     ["*"] = {
       require("formatter.filetypes.any").remove_trailing_whitespace,

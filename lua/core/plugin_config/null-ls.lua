@@ -11,7 +11,7 @@ require("null-ls").setup({
     -- formatting.stylua,
   },
   on_attach = function(client, bufnr)
-    if client.name == "tsserver" or client.name == "rust_analyzer" or client.name == "pyright" then
+    if client.name == "tsserver" or client.name == "rust_analyzer" or client.name == "pyright" or client.name == "html" then
       client.resolved_capabilities.document_formatting = false
     end
 
