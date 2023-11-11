@@ -5,15 +5,6 @@ local on_attach = function(client, bufnr)
   local opts = { noremap = true, silent = true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  if client.resolved_capabilities.document_formatting then
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      group = vim.api.nvim_create_augroup("Format", { clear = true }),
-      buffer = bufnr,
-      callback = function()
-        vim.lsp.buf.formatting_sync(nil, 1000)
-      end
-    })
-  end
 end
 
 
@@ -175,15 +166,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 -- vim.cmd [[
 -- augroup Prettier
---   au!
---   au BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss  Prettier
+--   autocmd!
+--   autocmd BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss
+--   autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
 -- augroup END
 -- ]]
--- vim.cmd [[autocmd BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss Prettier  ]]
-vim.cmd [[
-augroup Prettier
-  autocmd!
-  autocmd BufWritePre *.tsx,*.ts,*.js,*.html,*.css,*.scss
-  autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
-augroup END
-]]
