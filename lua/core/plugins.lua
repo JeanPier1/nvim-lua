@@ -82,6 +82,7 @@ local plugins = {
 
   -- dictionary
   "kkharji/sqlite.lua",
+  "mfussenegger/nvim-jdtls",
 }
 
 
