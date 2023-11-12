@@ -16,7 +16,7 @@ local function capabilities()
     return cmp_nvim_lsp.default_capabilities()
   end
 
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  local capabilities_local = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.textDocument.completion.completionItem.resolveSupport = {
     properties = {
@@ -26,7 +26,7 @@ local function capabilities()
     },
   }
 
-  return capabilities
+  return capabilities_local
 end
 
 
@@ -98,6 +98,23 @@ require("lspconfig").solargraph.setup {
 
 require("lspconfig").pyright.setup {
   capabilities = capabilities(),
+  cmd = { "pyright-langserver", "--stdio" },
+  filtetypes = { "python" },
+  settings = {
+    pyright = {
+      disableLanguageServices = false,
+      disableOrganizeImports = false
+    },
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        diagnosticMode = 'openFilesOnly',
+        useLibraryCodeForTypes = true,
+        typeCheckingMode = 'off'
+      }
+    }
+  }
+
 }
 require("lspconfig").cssls.setup {
   capabilities = capabilities,
@@ -132,7 +149,6 @@ require("lspconfig").angularls.setup {
   capabilities = capabilities()
 }
 
---capabilities.textDocument.completion.completionItem.snippetSupport = true
 require("lspconfig").html.setup {
   capabilities = capabilities()
 }
@@ -156,8 +172,8 @@ require("lspconfig").lua_ls.setup {
   }
 }
 
-local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
-local root_dir = require("jdtls.setup").find_root(root_markers)
+--local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+---local root_dir = require("jdtls.setup").find_root(root_markers)
 local function directory_exists(path)
   local f = io.popen("cd " .. path)
   local ff = f:read("*all")
@@ -181,7 +197,6 @@ local install_path = require("mason-registry").get_package("jdtls"):get_install_
 
 require("lspconfig").jdtls.setup {
   capabilities = capabilities(),
-  root_dir = root_dir,
   cmd = {
     "java",
     "-Declipse.application=org.eclipse.jdt.ls.core.id1",
@@ -202,7 +217,8 @@ require("lspconfig").jdtls.setup {
     install_path .. "/config_" .. "win",
     "-data",
     workspace_dir,
-  }
+  },
+  filtetypes = { "java" },
 }
 
 
