@@ -98,6 +98,9 @@ require("lspconfig").solargraph.setup {
 
 require("lspconfig").pyright.setup {
   capabilities = capabilities(),
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+  end,
   cmd = { "pyright-langserver", "--stdio" },
   filtetypes = { "python" },
   settings = {

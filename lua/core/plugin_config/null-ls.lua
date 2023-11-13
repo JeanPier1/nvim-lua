@@ -4,11 +4,13 @@ local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 require("null-ls").setup({
   sources = {
-    -- formatting.black,
+    formatting.black,
     -- formatting.rustfmt,
     -- formatting.phpcsfixer,
     formatting.prettier,
     -- formatting.stylua,
+    diagnostics.mypy,
+    diagnostics.ruff,
   },
   on_attach = function(client, bufnr)
     if client.name == "tsserver" or client.name == "rust_analyzer" or client.name == "pyright" or client.name == "html" then
@@ -19,9 +21,10 @@ require("null-ls").setup({
       vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
       vim.api.nvim_create_autocmd("BufWritePre", {
         group = augroup,
+        buffer = bufnr,
         callback = function()
-          -- vim.lsp.buf.formatting_sync()
-        end,
+          vim.lsp.buf.format({ bufnr = bufnr })
+        end
       })
     end
   end,
