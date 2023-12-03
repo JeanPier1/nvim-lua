@@ -82,7 +82,47 @@ local plugins = {
 
   -- dictionary
   "kkharji/sqlite.lua",
+
+  -- java
   "mfussenegger/nvim-jdtls",
+
+  -- python debugger
+  {
+    "mfussenegger/nvim-dap-python",
+    ft = "python",
+    dependencies = {
+      "mfussenegger/nvim-dap"
+    },
+    config = function(_, opts)
+      local path = "~/AppData/Local/nvim-data/mason/packages/debugpy/venv/bin/python"
+      require("dap-python").setup(path)
+    end
+  },
+  {
+    "mfussenegger/nvim-dap",
+    -- config = function(_, opts)
+    --   require("core.utils").load_mappings("dap")
+    -- end
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = "mfussenegger/nvim-dap",
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      dapui.setup()
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end
+  },
+
 }
 
 

@@ -18,3 +18,4 @@ require("core.plugin_config.null-ls")
 require("core.plugin_config.lspkind")
 require("core.plugin_config.ts-autotag")
 require("core.plugin_config.formattear")
+require("core.plugin_config.nvim_web_devicons");

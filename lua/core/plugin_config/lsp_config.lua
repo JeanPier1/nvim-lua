@@ -141,7 +141,11 @@ require("lspconfig").sourcekit.setup {
 }
 
 require("lspconfig").astro.setup {
-  capabilities = capabilities()
+  on_attach = on_attach,
+  capabilities = capabilities(),
+  cmd = { "astro-ls", "--stdio" },
+  filtetypes = { "astro" },
+  -- root_dir = root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
 }
 require("lspconfig").emmet_ls.setup {
   -- on_attach = on_attach,

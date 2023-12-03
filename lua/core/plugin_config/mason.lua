@@ -10,7 +10,15 @@ require("mason").setup({
     ensure_installed = {
       "mypy",
       "ruff",
-      "pyright"
+      "pyright",
+      "stylua",
+      "selene",
+      "luacheck",
+      "shellcheck",
+      "shfmt",
+      "tailwindcss-language-server",
+      "typescript-language-server",
+      "css-lsp",
     }
   },
   pip = {
