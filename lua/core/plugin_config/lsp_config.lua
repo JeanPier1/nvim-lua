@@ -1,5 +1,7 @@
 local agroup_format = vim.api.nvim_create_augroup("Format", { clear = true })
 
+local util = require "lspconfig.util"
+
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local opts = { noremap = true, silent = true }
@@ -179,8 +181,6 @@ require("lspconfig").lua_ls.setup {
   }
 }
 
---local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
----local root_dir = require("jdtls.setup").find_root(root_markers)
 local function directory_exists(path)
   local f = io.popen("cd " .. path)
   local ff = f:read("*all")
@@ -227,6 +227,25 @@ require("lspconfig").jdtls.setup {
   },
   filtetypes = { "java" },
 }
+
+
+require("lspconfig").rust_analyzer.setup {
+  capabilities = capabilities(),
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+  end,
+  filtetypes = { "rust" },
+  root_dir = util.root_pattern("Cargo.toml"),
+  settings = {
+    ['rust_analyzer'] = {
+      cargo = {
+        allFeatures = true
+      }
+    }
+  }
+
+}
+
 
 
 -- Diagnostic symbols in the sign column (gutter)

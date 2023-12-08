@@ -5,13 +5,13 @@ local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 require("null-ls").setup({
   sources = {
     formatting.black,
-    -- formatting.rustfmt,
+    formatting.rustfmt,
     -- formatting.phpcsfixer,
     formatting.prettier,
-    formatting.stylua,
+    -- formatting.stylua,
     diagnostics.mypy,
     diagnostics.ruff,
-    diagnostics.eslint_d,
+    -- diagnostics.eslint_d,
   },
   on_attach = function(client, bufnr)
     if client.name == "tsserver" or client.name == "rust_analyzer" or client.name == "pyright" or client.name == "html" or client.name == "astro" then

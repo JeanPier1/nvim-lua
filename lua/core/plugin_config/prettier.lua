@@ -14,5 +14,6 @@ prettier.setup({
     "typescript",
     "typescriptreact",
     "yaml",
+    "rust"
   },
 })

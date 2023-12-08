@@ -19,6 +19,7 @@ require("mason").setup({
       "tailwindcss-language-server",
       "typescript-language-server",
       "css-lsp",
+      "rust-analyzer",
     }
   },
   pip = {
