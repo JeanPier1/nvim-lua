@@ -11,18 +11,25 @@ require('nvim-treesitter.configs').setup({
     "html",
     "markdown",
     "markdown_inline",
-    "vim" },
+    "vim",
+    "astro",
+    "cmake",
+    "css",
+    "fish",
+    "gitignore",
+    "go",
+    "graphql",
+    "java",
+    "rust",
+    "scss",
+    "sql",
+    "svelte",
+  },
   sync_install = false,
   auto_install = false,
   highlight = {
     enable = true,
     disable = { "c", "rust" },
-    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
   indent = {
@@ -35,21 +42,40 @@ require('nvim-treesitter.configs').setup({
     enable = true,
     enable_autocmd = false,
   },
-  -- refactor = {
-  --   highlight_definitions = {
-  --     enable = true,
-  --     clear_on_cursor_move = true,
-  --   },
-  --   highlight_current_scope = { enable = true },
-  --   smart_rename = {
-  --     enable = true,
-  --     keymaps = {
-  --       smart_rename = 'tr'
-  --     }
-  --   }
-  -- }
+  query_linter = {
+    enable = true,
+    use_virtual_text = true,
+    lint_events = { "BufWrite", "CursorHold" }
+  },
+  playground = {
+    enable = true,
+    disable = {},
+    updatetime = 25,
+    presist_queries = true,
+    keybindings = {
+      toggle_query_editor = "o",
+      toggle_hl_groups = "i",
+      toggle_injected_languages = "t",
+      toggle_anonymous_nodes = "a",
+      toggle_language_display = "I",
+      focus_language = "f",
+      unfocus_language = "F",
+      update = "R",
+      goto_node = "<cr>",
+      show_help = "?",
+    }
+  }
+
 })
 
 local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
 parser_config.tsx.filetype_to_parsername = { "javascript", "typescript.tsx" }
 parser_config.rust.filetype_to_parsername = { "rust" }
+
+-- MDX
+vim.filetype.add({
+  extension = {
+    mdx = "mdx"
+  },
+})
+vim.treesitter.language.register("markdown", "mdx")

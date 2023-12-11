@@ -20,6 +20,7 @@ require("mason").setup({
       "typescript-language-server",
       "css-lsp",
       "rust-analyzer",
+      "gopls",
     }
   },
   pip = {

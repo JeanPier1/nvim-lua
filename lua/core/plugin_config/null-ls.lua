@@ -6,6 +6,9 @@ require("null-ls").setup({
   sources = {
     formatting.black,
     formatting.rustfmt,
+    formatting.gofmt,
+    formatting.goimports_reviser,
+    formatting.golines,
     -- formatting.phpcsfixer,
     formatting.prettier,
     -- formatting.stylua,

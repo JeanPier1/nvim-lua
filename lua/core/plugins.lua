@@ -100,9 +100,6 @@ local plugins = {
   },
   {
     "mfussenegger/nvim-dap",
-    -- config = function(_, opts)
-    --   require("core.utils").load_mappings("dap")
-    -- end
   },
   {
     "rcarriga/nvim-dap-ui",
@@ -122,7 +119,17 @@ local plugins = {
       end
     end
   },
-
+  {
+    "leoluz/nvim-dap-go",
+    ft = "go",
+    dependencies = "mfussenegger/nvim-dap",
+    config = function(_, opts)
+      require("dap-go").setup(opts)
+    end
+  },
+  {
+    "microsoft/vscode-node-debug2"
+  },
 }
 
 
